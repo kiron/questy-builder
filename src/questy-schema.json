@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Questionnaire Builder",
+  "required": [
+    "denomination",
+    "identifier",
+    "questionnaireable_type",
+    "questionnaireable_id",
+    "pages",
+    "results"
+  ],
+  "properties": {
+    "denomination": {
+      "title": "Denomination",
+      "description": "The name of the Questionnaire",
+      "type": "string",
+      "examples": ["Nice new Questy"]
+    },
+    "identifier": {
+      "title": "A Unique identifier",
+      "description": "May only use lower case letters, _ and -, no whitespaces",
+      "type": "string",
+      "examples": ["newquesty"],
+      "pattern": "^([a-z][a-z_-]+)$"
+    },
+    "questionnaireable_type": {
+      "title": "Which element of the campus is this referring to?",
+      "description": "Lower case letters with _, likely values are transfer_checklist_step or course",
+      "type": "string",
+      "examples": ["course"],
+      "pattern": "^([a-z][a-z_]+)$"
+    },
+    "questionnaireable_id": {
+      "title": "Id of the element this refers to",
+      "description": "This is the id of the course or transfer checklist step",
+      "type": "integer",
+      "examples": [14]
+    },
+    "pages": {
+      "title": "Pages of the quesionnaire",
+      "type": "array",
+      "items": {
+        "title": "Page",
+        "type": "object",
+        "properties": {
+          "denomination": {
+            "type": "string",
+            "title": "Name of the page of the page"
+          },
+          "questions": {
+            "type": "array",
+            "title": "Questions of the page",
+            "items": {
+              "title": "Question",
+              "type": "object",
+              "required": ["identifier","label", "question_type", "options"],
+              "properties": {
+                "identifier": {
+                  "type": "string",
+                  "title": "Identifier",
+                  "description": "Unique identifier for this question",
+                  "examples": ["question1"],
+                  "pattern": "^([a-z][a-z_-]+)$"
+                },
+                "label": {
+                  "type": "string",
+                  "title": "Label",
+                  "description": "Label / text shown in the frontend above the question",
+                  "examples": ["What do you like more?"],
+                  "pattern": "^(.*)$"
+                },
+                "description": {
+                  "type": "string",
+                  "title": "A descrpiptive text for this question (optional)",
+                  "default": "",
+                  "examples": ["Select if you like A or B more"],
+                  "pattern": "^(.*)$"
+                },
+                "question_type": {
+                  "type": "string",
+                  "title": "Type of the question",
+                  "description": "Possible values are: Multiple Choice Question, Country Select, Free Text Question, Satisfaction Question, Difficulty Question, Text Only",
+                  "enum": [
+                    "Multiple Choice Question",
+                    "Country Select",
+                    "Free Text Question",
+                    "Satisfaction Question",
+                    "Difficulty Question",
+                    "Text Only"
+                  ],
+                  "examples": ["Multiple Choice Question"]
+                },
+                "options": {
+                  "type": "array",
+                  "title": "The selectable options if the type is Multiple Choice Question",
+                  "items": {
+                    "type": "string",
+                    "title": "Answer option",
+                    "examples": ["Option A", "Option B"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "title": "Possible results of this questionnaire",
+      "items": {
+        "type": "object",
+        "title": "Result",
+        "required": [
+          "description",
+          "short_description",
+          "successful",
+          "conditions"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "examples": ["Nice one!"]
+          },
+          "short_description": {
+            "type": "string",
+            "title": "Short description",
+            "examples": ["Nice!"]
+          },
+          "successful": {
+            "type": "boolean",
+            "title": "Is this a successful result?",
+            "default": false,
+            "examples": [true]
+          },
+          "conditions": {
+            "type": "array",
+            "title": "If any of this conditions is met this will be the result (i.e. a logical or)",
+            "items": {
+              "type": "string",
+              "title": "If any of those ",
+              "default": "",
+              "examples": [
+                "quesiont1 == A and question 2 == C",
+                "question3 == No"
+              ],
+              "pattern": "^(([a-z][a-z_-]+)[ ]*(==|!=|in|<|>)[ ]*(\\[((\\d|'\\w')*,)*(\\d|'\\w')+\\]|'\\w*')[ ]*(And|AND|and))*[ ]*([a-z][a-z_-]+)[ ]*(==|!=|in|<|>)[ ]*(\\[((\\d|'\\w')*,)*(\\d|'\\w')+\\]|'\\w*')$"
+            }
+          }
+        }
+      }
+    }
+  }
+}
