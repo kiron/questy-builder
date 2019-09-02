@@ -19,24 +19,38 @@ function App() {
   };
 
   const prettifySchema = data => {
-    const pages = data.pages;
-    if (!pages || !Array.isArray(pages)) {
-      return data;
-    }
-    const newPages = pages.reduce((obj, page) => {
-      if (!page.questions || !Array.isArray(page.questions)) {
-        obj[page.denomination] = {};
-        return obj;
-      }
-      const newQuestions = page.questions.reduce((result, question) => {
-        const { identifier, ...newQuestion } = question;
-        result[identifier] = question;
-        return result;
-      }, {});
-      obj[page.denomination] = newQuestions;
-      return obj;
-    }, {});
-    return Object.assign({}, data, { pages: newPages });
+    const newPages =
+      !data.pages || !Array.isArray(data.pages)
+        ? {}
+        : data.pages.reduce((obj, page) => {
+            if (!page.denomination) {
+              return obj;
+            }
+            const newQuestions =
+              !page.questions ||
+              !Array.isArray(page.questions) ||
+              page.questions.length === 0
+                ? {}
+                : page.questions.reduce((result, question) => {
+                    const { identifier, ...newQuestion } = question;
+                    result[identifier] = newQuestion;
+                    return result;
+                  }, {});
+            obj[page.denomination] = newQuestions;
+            return obj;
+          }, {});
+    const newResults =
+      !data.results || !Array.isArray(data.results) || data.results.length === 0
+        ? {}
+        : data.results.reduce((obj, result) => {
+            if (!result.denomination) {
+              return obj;
+            }
+            const { denomination, ...newResult } = result;
+            obj[denomination] = newResult;
+            return obj;
+          }, {});
+    return Object.assign({}, data, { pages: newPages, results: newResults });
   };
 
   return (

@@ -54,7 +54,7 @@
             "items": {
               "title": "Question",
               "type": "object",
-              "required": ["identifier","label", "question_type", "options"],
+              "required": ["identifier", "label", "question_type", "options"],
               "properties": {
                 "identifier": {
                   "type": "string",
@@ -119,6 +119,11 @@
           "conditions"
         ],
         "properties": {
+          "denomination": {
+            "type": "string",
+            "title": "Name of the Result",
+            "examples": ["Result 1"]
+          },
           "description": {
             "type": "string",
             "title": "Description",
